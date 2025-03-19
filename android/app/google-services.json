@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "968185374662",
+    "project_id": "neurosphere-7cdab",
+    "storage_bucket": "neurosphere-7cdab.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:968185374662:android:b050eca6a7e0b2edd074c7",
+        "android_client_info": {
+          "package_name": "com.example.neurosphere"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2HZc3_qc_oLty2RCXYNFTfDOKBj91Pu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
