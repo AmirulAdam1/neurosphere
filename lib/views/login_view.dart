@@ -22,58 +22,127 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Column(
-        children: [
-          TextField(
-            controller: _email,
-            enableSuggestions: false,
-            autocorrect: false,
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              hintText: 'Enter your email here',
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+        child: ListView(
+          children: [
+            const SizedBox(height: 40),
+            // Title
+            const Text(
+              'Welcome Back!',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
             ),
-          ),
-          TextField(
-            controller: _password,
-            obscureText: true,
-            enableSuggestions: false,
-            autocorrect: false,
-            decoration: const InputDecoration(
-              hintText: 'Enter your password here',
+            const SizedBox(height: 20),
+            const Text(
+              'Please login to continue.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16, color: Colors.blueAccent),
             ),
-          ),
-          TextButton(
-            onPressed: () async {
-              final email = _email.text;
-              final password = _password.text;
-              try {
-                final UserCredential = await FirebaseAuth.instance
-                    .signInWithEmailAndPassword(
-                      email: email,
-                      password: password,
-                    );
-                print(UserCredential);
-              } on FirebaseAuthException catch (e) {
-                if (e.code == 'invalid-credential') {
-                  print('Invalid credential');
-                } else {
-                  print('SOMETHING ELSE HAPPENED');
-                  print(e.code);
+            const SizedBox(height: 40),
+            // Email Field
+            TextField(
+              controller: _email,
+              enableSuggestions: false,
+              autocorrect: false,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                labelText: 'Email',
+                hintText: 'Enter your email here',
+                prefixIcon: const Icon(Icons.email, color: Colors.blue),
+                filled: true,
+                fillColor: Colors.blue[50],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.blue, width: 2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Password Field
+            TextField(
+              controller: _password,
+              obscureText: true,
+              enableSuggestions: false,
+              autocorrect: false,
+              decoration: InputDecoration(
+                labelText: 'Password',
+                hintText: 'Enter your password here',
+                prefixIcon: const Icon(Icons.lock, color: Colors.blue),
+                filled: true,
+                fillColor: Colors.blue[50],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.blue, width: 2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+            // Login Button
+            ElevatedButton(
+              onPressed: () async {
+                final email = _email.text;
+                final password = _password.text;
+                try {
+                  final UserCredential = await FirebaseAuth.instance
+                      .signInWithEmailAndPassword(
+                        email: email,
+                        password: password,
+                      );
+                  print(UserCredential);
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'invalid-credential') {
+                    print('Invalid credential');
+                  } else {
+                    print('SOMETHING ELSE HAPPENED');
+                    print(e.code);
+                  }
                 }
-              }
-            },
-            child: const Text('Login'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(
-                context,
-              ).pushNamedAndRemoveUntil('/register/', (route) => false);
-            },
-            child: const Text('Not registered yet? Register here!'),
-          ),
-        ],
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 15),
+              ),
+              child: const Text(
+                'Login',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Register Button
+            TextButton(
+              onPressed: () {
+                Navigator.of(
+                  context,
+                ).pushNamedAndRemoveUntil('/register/', (route) => false);
+              },
+              child: const Text(
+                'Not registered yet? Register here!',
+                style: TextStyle(fontSize: 16, color: Colors.blue),
+              ),
+            ),
+            const SizedBox(height: 40),
+          ],
+        ),
       ),
     );
   }
