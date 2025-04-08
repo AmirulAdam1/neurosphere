@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart'; // For PathUrlStrategy
 import 'package:neurosphere/firebase_options.dart';
 import 'package:neurosphere/views/login_view.dart';
 import 'package:neurosphere/views/register_view.dart';
@@ -11,11 +10,8 @@ import 'package:neurosphere/views/chat_view.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
+  // Initialize Firebase for mobile
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  // Set up routing to handle path-based URLs correctly
-  setUrlStrategy(PathUrlStrategy());
 
   runApp(MyApp());
 }

@@ -72,10 +72,19 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mental Health Chatbot'),
-        backgroundColor: Colors.blueAccent,
-        elevation: 2,
-        centerTitle: true,
+        title: Text(
+          'Mental Health Chatbot',
+          style: TextStyle(
+            fontSize: 20, // Larger font size for better visibility
+            fontWeight: FontWeight.bold, // Bold to make it stand out
+            letterSpacing: 1.5, // Adds some spacing between the letters
+            fontFamily: 'Roboto', // Use a modern font for a cleaner look
+            color: Colors.white, // Make the text white for contrast
+          ),
+        ),
+        backgroundColor: Colors.blueAccent, // Keep the background color
+        elevation: 2, // Slight shadow for depth
+        centerTitle: true, // Centers the title
         actions: [
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.white),
@@ -83,6 +92,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -226,10 +236,10 @@ class BubblePainter extends CustomPainter {
 // Function to get the API Key depending on the platform
 String? _getApiKey() {
   if (kIsWeb) {
-    return 'AIzaSyBkY-RN0riSlTosManq56lXd5QtcKVOpdU'; // Replace with your method of retrieving the API key
+    return 'AIzaSyBkY-RN0riSlTosManq56lXd5QtcKVOpdU'; // Hardcoded for testing
   } else if (Platform.isAndroid || Platform.isIOS) {
-    return Platform.environment['GEMINI_API_KEY'];
+    return 'AIzaSyBkY-RN0riSlTosManq56lXd5QtcKVOpdU'; // Hardcoded for testing
   } else {
-    return Platform.environment['GEMINI_API_KEY'];
+    return null; // Return null if API key is not found
   }
 }
