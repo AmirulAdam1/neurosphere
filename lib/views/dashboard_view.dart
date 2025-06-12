@@ -3,6 +3,8 @@ import 'package:neurosphere/views/chat_view.dart';
 import 'package:neurosphere/views/manage_journal/journal_view.dart';
 import 'package:neurosphere/views/profile_view.dart';
 import 'package:neurosphere/views/sos_location_view.dart';
+import 'package:neurosphere/views/steps_today_view.dart';
+
 
 class DashboardView extends StatelessWidget {
   const DashboardView({super.key});
@@ -14,6 +16,7 @@ class DashboardView extends StatelessWidget {
       _DashboardItem(title: 'Chatbot', icon: Icons.chat_bubble_outline, widget: const ChatScreen()),
       _DashboardItem(title: 'Journal', icon: Icons.book_outlined, widget: const JournalView()),
       _DashboardItem(title: 'SOS Map', icon: Icons.location_on, widget: const SosLocationView()),
+      _DashboardItem(title: 'Steps', icon: Icons.directions_walk, widget: const StepsTodayView()),
     ];
 
     return Scaffold(
