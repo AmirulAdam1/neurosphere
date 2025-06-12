@@ -6,6 +6,8 @@ import 'package:neurosphere/views/login_view.dart';
 import 'package:neurosphere/views/register_view.dart';
 import 'package:neurosphere/views/verify_email_view.dart';
 import 'package:neurosphere/views/chat_view.dart';
+import 'package:neurosphere/views/dashboard_view.dart';
+import 'package:neurosphere/views/sos_location_view.dart'; // ✅ import SOS screen
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
+      debugShowCheckedModeBanner: false,
       // Using StreamBuilder to handle FirebaseAuth state changes dynamically
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
@@ -32,21 +35,24 @@ class MyApp extends StatelessWidget {
             final user = snapshot.data;
             if (user != null) {
               if (user.emailVerified) {
-                return const ChatScreen(); // Navigate to the chat screen if the user is logged in and email is verified
+                return const DashboardView();
               } else {
-                return const VerifyEmailView(); // Navigate to email verification if the user is logged in but email isn't verified
+                return const VerifyEmailView();
               }
             } else {
-              return const LoginView(); // Navigate to the login screen if the user is not logged in
+              return const LoginView();
             }
           } else {
-            return const CircularProgressIndicator(); // Show loading while checking the authentication state
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
           }
         },
       ),
       routes: {
         '/login/': (context) => const LoginView(),
         '/register/': (context) => const RegisterView(),
+        '/sos': (context) => const SosLocationView(), // ✅ added route here
       },
     );
   }
