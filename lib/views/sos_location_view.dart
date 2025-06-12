@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:url_launcher/url_launcher.dart'; // For implicit intent
 
 class SosLocationView extends StatefulWidget {
   const SosLocationView({super.key});
@@ -87,6 +88,18 @@ class _SosLocationViewState extends State<SosLocationView> {
     }
   }
 
+  // This function uses url_launcher to call the mental health helpline
+  Future<void> _callHelpline() async {
+    final Uri phoneUri = Uri(scheme: 'tel', path: '15999');
+    if (await canLaunchUrl(phoneUri)) {
+      await launchUrl(phoneUri);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open dialer')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,19 +107,36 @@ class _SosLocationViewState extends State<SosLocationView> {
         title: const Text('SOS Location'),
         backgroundColor: Colors.redAccent,
       ),
-      body:
-          _currentLocation == null
-              ? const Center(child: CircularProgressIndicator())
-              : GoogleMap(
-                onMapCreated: (controller) => mapController = controller,
-                initialCameraPosition: CameraPosition(
-                  target: _currentLocation!,
-                  zoom: 14,
+      body: _currentLocation == null
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                Expanded(
+                  child: GoogleMap(
+                    onMapCreated: (controller) => mapController = controller,
+                    initialCameraPosition: CameraPosition(
+                      target: _currentLocation!,
+                      zoom: 14,
+                    ),
+                    markers: _markers,
+                    myLocationEnabled: true,
+                    myLocationButtonEnabled: true,
+                  ),
                 ),
-                markers: _markers,
-                myLocationEnabled: true,
-                myLocationButtonEnabled: true,
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: ElevatedButton.icon(
+                    onPressed: _callHelpline,
+                    icon: const Icon(Icons.phone),
+                    label: const Text('Call Mental Health Helpline'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.redAccent,
+                      minimumSize: const Size.fromHeight(50),
+                    ),
+                  ),
+                ),
+              ],
+            ),
     );
   }
 }
