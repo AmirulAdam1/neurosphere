@@ -7,7 +7,7 @@ import 'package:neurosphere/views/register_view.dart';
 import 'package:neurosphere/views/verify_email_view.dart';
 import 'package:neurosphere/views/chat_view.dart';
 import 'package:neurosphere/views/dashboard_view.dart';
-import 'package:neurosphere/views/sos_location_view.dart'; // ✅ import SOS screen
+import 'package:neurosphere/views/sos_location_view.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
