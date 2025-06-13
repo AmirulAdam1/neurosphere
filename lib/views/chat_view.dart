@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
 import 'dart:io';
+import 'package:firebase_ai/firebase_ai.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -16,9 +16,9 @@ class _ChatScreenState extends State<ChatScreen> {
   List<Map> _messages = [];
 
   // Send message function with API integration
-  Future<void> sendMessage(String message) async {
+  Future<void> sendMessage(String messageText) async {
     setState(() {
-      _messages.add({"text": message, "isUserMessage": true});
+      _messages.add({"text": messageText, "isUserMessage": true});
     });
 
     final apiKey = _getApiKey();
@@ -27,26 +27,36 @@ class _ChatScreenState extends State<ChatScreen> {
       return; // Handle missing API key (you could show a dialog here)
     }
 
-    final model = GenerativeModel(
-      model: 'gemini-1.5-pro',
-      apiKey: apiKey,
-      generationConfig: GenerationConfig(
-        temperature: 1,
-        topK: 40,
-        topP: 0.95,
-        maxOutputTokens: 8192,
-        responseMimeType: 'text/plain',
-      ),
-      systemInstruction: Content.system(
-        'You are a compassionate mental health therapist, offering support and understanding. During the first few interactions, focus on gentle and open-ended questions to understand the user\'s feelings or situation without overwhelming them. Keep responses simple, calm, and comforting. Offer just enough guidance to make the user feel heard and safe.\n\nIf the user needs to provide additional information or if there’s something they haven’t thought of that may help, gently prompt them in a non-intrusive manner. Avoid overwhelming them with too much advice or information in the beginning.\n\nIf a situation requires professional intervention, kindly advise the user to consult with a licensed mental health professional. Always prioritize creating a safe, supportive, and non-judgmental space for the user.',
-      ),
+    // Define the generation config
+    final generationConfig = GenerationConfig(responseMimeType: 'text/plain');
+    final systemInstruction = Content.system(
+      'You are a compassionate mental health therapist, offering support and understanding. During the first few interactions, focus on gentle and open-ended questions to understand the user\'s feelings or situation without overwhelming them. Keep responses simple, calm, and comforting. Offer just enough guidance to make the user feel heard and safe.\n\nIf the user needs to provide additional information or if there’s something they haven’t thought of that may help, gently prompt them in a non-intrusive manner. Avoid overwhelming them with too much advice or information in the beginning.\n\nIf a situation requires professional intervention, kindly advise the user to consult with a licensed mental health professional. Always prioritize creating a safe, supportive, and non-judgmental space for the user.',
     );
 
-    final chat = model.startChat(history: []);
-    final content = Content.text(message);
+    final model = FirebaseAI.googleAI().generativeModel(
+      model: 'gemini-2.5-flash-preview-05-20',
+      generationConfig: generationConfig,
+      systemInstruction: systemInstruction,
+    );
+
+    // Create Content object for the user message
+    final userMessage = Content('user', [
+      TextPart(messageText), // Wrap user message text in TextPart
+    ]);
+
+    // Define the message history with user input
+    final history = [
+      userMessage, // Add the user message to history
+    ];
+
+    // Pass history to start the chat
+    final chat = model.startChat(
+      history: history,
+    ); // Correctly pass history here
 
     try {
-      final response = await chat.sendMessage(content);
+      // Send the message and receive a response
+      final response = await chat.sendMessage(userMessage);
       setState(() {
         _messages.add({"text": response.text, "isUserMessage": false});
       });

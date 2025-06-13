@@ -39,6 +39,7 @@ dependencies:
   firebase_auth: ^5.5.1
   cloud_firestore: ^5.0.1
   google_generative_ai: ^0.4.6
+  firebase_ai: ^2.1.0
   google_maps_flutter: ^2.6.0
   geolocator: ^10.1.0
   pedometer: ^4.0.1
