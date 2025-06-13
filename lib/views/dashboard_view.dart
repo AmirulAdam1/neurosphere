@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:neurosphere/views/chat_view.dart';
 import 'package:neurosphere/views/manage_journal/journal_view.dart';
 import 'package:neurosphere/views/profile_view.dart';
 import 'package:neurosphere/views/sos_location_view.dart';
 import 'package:neurosphere/views/steps_today_view.dart';
-
 
 class DashboardView extends StatelessWidget {
   const DashboardView({super.key});
@@ -24,6 +24,16 @@ class DashboardView extends StatelessWidget {
         title: const Text('Neurosphere Dashboard'),
         centerTitle: true,
         backgroundColor: Colors.blueAccent,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.of(context).pushReplacementNamed('/login/');
+            },
+            tooltip: 'Logout',
+          ),
+        ],
       ),
       body: GridView.count(
         crossAxisCount: 2,
