@@ -21,12 +21,11 @@ class _JournalViewState extends State<JournalView> {
         backgroundColor: Colors.blueAccent,
       ),
       body: user == null
-          ? const Center(child: Text("User not logged in."))
+          ? const Center(child: Text('User not logged in.'))
           : StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('journals')
-                  .where('uid', isEqualTo: user!.uid)
-                  .orderBy('timestamp', descending: true)
+                  .where('uid', isEqualTo: user!.uid) //  ❗️no .orderBy()
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -39,16 +38,25 @@ class _JournalViewState extends State<JournalView> {
                   return const Center(child: Text('No journal entries yet.'));
                 }
 
-                final journals = snapshot.data!.docs;
+                // ---- sort entries locally by timestamp ----
+                final journals = snapshot.data!.docs.toList()
+                  ..sort((a, b) {
+                    final tsA = (a['timestamp'] as Timestamp).toDate();
+                    final tsB = (b['timestamp'] as Timestamp).toDate();
+                    return tsB.compareTo(tsA); // newest first
+                  });
 
                 return ListView.builder(
                   itemCount: journals.length,
                   itemBuilder: (context, index) {
-                    final entry = journals[index].data() as Map<String, dynamic>;
-                    final timestamp = (entry['timestamp'] as Timestamp).toDate();
+                    final entry =
+                        journals[index].data() as Map<String, dynamic>;
+                    final timestamp =
+                        (entry['timestamp'] as Timestamp).toDate();
 
                     return Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      margin:
+                          const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       elevation: 3,
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -57,34 +65,28 @@ class _JournalViewState extends State<JournalView> {
                           children: [
                             Row(
                               children: [
-                                Text(
-                                  entry['emotion'] ?? '',
-                                  style: const TextStyle(fontSize: 28),
-                                ),
+                                Text(entry['emotion'] ?? '',
+                                    style: const TextStyle(fontSize: 28)),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
                                     entry['title'] ?? 'Untitled',
                                     style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 8),
-                            Text(
-                              entry['thoughts'] ?? '',
-                              style: const TextStyle(fontSize: 16),
-                            ),
+                            Text(entry['thoughts'] ?? '',
+                                style: const TextStyle(fontSize: 16)),
                             const SizedBox(height: 10),
                             Text(
-                              '${timestamp.day}/${timestamp.month}/${timestamp.year} ${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}',
+                              '${timestamp.day}/${timestamp.month}/${timestamp.year} '
+                              '${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}',
                               style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
+                                  fontSize: 12, color: Colors.grey),
                             ),
                           ],
                         ),
