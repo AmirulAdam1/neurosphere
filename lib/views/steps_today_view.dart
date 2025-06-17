@@ -13,6 +13,7 @@ class _StepsTodayViewState extends State<StepsTodayView> {
   late Stream<StepCount> _stepCountStream;
   int _steps = 0;
   int? _initialSteps;
+
   Future<void> _checkPermissions() async {
     final status = await Permission.activityRecognition.status;
     if (!status.isGranted) {
@@ -46,6 +47,19 @@ class _StepsTodayViewState extends State<StepsTodayView> {
     setState(() => _steps = 0);
   }
 
+  // ✅ Added: Method to return motivational messages
+  String _getMotivationalMessage(int steps) {
+    if (steps < 1000) {
+      return "Let’s get moving! Even a short walk helps 🌱";
+    } else if (steps < 5000) {
+      return "Great! You're warming up. Keep going! 🚶";
+    } else if (steps < 10000) {
+      return "Amazing progress! Almost at your daily goal 🔥";
+    } else {
+      return "You've smashed it! Fantastic work! 🎉";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,11 +79,12 @@ class _StepsTodayViewState extends State<StepsTodayView> {
               style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 30),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40.0),
+            
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40.0),
               child: Text(
-                'Walking reduces anxiety, boosts mood, and clears your thoughts. Keep moving! 💪',
-                style: TextStyle(fontSize: 16),
+                _getMotivationalMessage(_steps),
+                style: const TextStyle(fontSize: 16),
                 textAlign: TextAlign.center,
               ),
             ),
